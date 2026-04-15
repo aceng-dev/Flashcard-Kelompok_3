@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "flashcards")
 public class Flashcard {
 
-    @PrimaryKey(autoGenerate = true) // ID otomatis
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     private String question;
@@ -16,7 +16,7 @@ public class Flashcard {
     @Ignore // Kolom ini tidak disimpan ke database (hanya untuk status UI saat aplikasi berjalan)
     private boolean isFlipped;
 
-    // Constructor untuk Database
+
     public Flashcard(String question, String syntaxAnswer) {
         this.question = question;
         this.syntaxAnswer = syntaxAnswer;

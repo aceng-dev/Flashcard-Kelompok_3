@@ -57,46 +57,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAddDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_card, null);
-        builder.setView(dialogView);
+        AddCardDialogFragment dialogFragment = new AddCardDialogFragment();
 
-        AlertDialog dialog = builder.create();
-
-        EditText etQuestion = dialogView.findViewById(R.id.etQuestion);
-        EditText etSyntax = dialogView.findViewById(R.id.etSyntax);
-        Button btnSave = dialogView.findViewById(R.id.btnSave);
-
-        btnSave.setOnClickListener(v -> {
-            String question = etQuestion.getText().toString().trim();
-            String syntax = etSyntax.getText().toString().trim();
-
-            // Cek apakah pertanyaan kosong
-            if (question.isEmpty()) {
-                etQuestion.setError("Pertanyaan tidak boleh kosong");
-                etQuestion.requestFocus(); // Arahkan kursor ke sini
-                return; // Hentikan proses simpan
-            }
-
-            // Cek apakah sintaks kosong
-            if (syntax.isEmpty()) {
-                etSyntax.setError("Sintaks tidak boleh kosong");
-                etSyntax.requestFocus(); // Arahkan kursor ke sini
-                return; // Hentikan proses simpan
-            }
-
+        // Pasang listener untuk menangani data yang dikirim dari Fragment
+        dialogFragment.setAddCardListener((question, syntax) -> {
             Flashcard newCard = new Flashcard(question, syntax);
 
+            // Simpan ke Database
             database.flashcardDao().insertCard(newCard);
 
+            // Update UI
             flashcardList.add(newCard);
             adapter.notifyItemInserted(flashcardList.size() - 1);
             recyclerView.smoothScrollToPosition(flashcardList.size() - 1);
-
-            dialog.dismiss();
         });
 
-        dialog.show();
+        // Tampilkan Dialog menggunakan FragmentManager
+        dialogFragment.show(getSupportFragmentManager(), "AddCardDialog");
     }
 
     // Fungsi untuk memunculkan pop-up peringatan hapus
